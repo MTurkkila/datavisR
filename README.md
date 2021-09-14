@@ -6,3 +6,5 @@ Some links:
 * Book: https://kieranhealy.org/publications/dataviz/
 * Rob Kabacoff - Data Visualization with R: https://rkabacoff.github.io/datavis/
 * Markdown cheat sheet: https://www.markdownguide.org/cheat-sheet/
+* Alberto Cairo's The Functional Art: http://www.thefunctionalart.com/
+* Same Stats, Different Graphs: https://www.autodesk.com/research/publications/same-stats-different-graphs
