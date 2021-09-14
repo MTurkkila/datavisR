@@ -1,0 +1,24 @@
+---
+title: "Lecture 1 - Home assignment"
+author: "Miikka Turkkila"
+output: pdf_document
+---
+
+## My own dataset
+For my current research I have network data, with nodes representing students and edges represent different type interaction. I will compute some network measures in the near future and use those measures for the network visualizations.
+I also have some pre-post-test data from previous research that I could use. The test data has students on rows and columns have points (categorical) from test items.
+
+## Previous experience
+Courses on:
+
+* Basics of programming (Java)
+* Scientific computing (Python, Matlab and C)
+* Introduction to Open Data Science (R)
+* Machine learning (Python)
+
+Additionally, I have done two simple online tools with Javascript that are used in research and in teaching. Actually, my lesson observation tool includes simple timeline visualization of observations that is drawn on HTML-canvas using only Javascript. It was rather interesting to figure out how to draw axes, ticks, labels and the data with just canvas methods.
+
+I have mainly used Python in my analyzes and data visualization (Master's thesis, two articles and few posters etc.). I plan to use R more in the future.
+
+## Expectations
+I think I have quite good basic understanding of data visualization, but through this course I hope to refine and expand my knowledge and skills. I want to practice and become more proficient with R and ggplot2 as those have some benefits over Python. Additionally, there are some nice network analysis packages for R that I might need to use in the future.  
