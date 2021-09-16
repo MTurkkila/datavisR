@@ -4,21 +4,45 @@ author: "Miikka Turkkila"
 date: "9/16/2021"
 output:
   prettydoc::html_pretty:
-    theme: tactile
-    #highlight: github
-  #toc: true
-  #toc_depth: 2
-  #fig_caption: true
-  #fig_width: 6
+    theme: architect
+    highlight: github
+    toc: true
+    toc_depth: 3
+    fig_caption: true
+    fig_width: 6
+
 ---
 
 ***
 
 # Introduction
+This is my course diary for the University of Helsinki course Data Visualization in R for PhD students. I'll use this diary to record (mainly for myself) my progress on the course by including relevant exercises and assessments. Additionally I hope to use this diary to facilitate my own reflections and thoughts about data visualization more generally.
 
-```{r}
-# just a test
-1+1
-```
-  
+Below are my previous experience and expectations for the course. This was part of home assignment on the first lecture.
+
+## Previous experience
+Courses on:
+
+- Basics of programming (Java)
+- Scientific computing (Python, Matlab and C)
+- Introduction to Open Data Science (R)
+- Machine learning (Python)
+
+Additionally, I have done two simple online tools with Javascript that are used in research and in teaching. Actually, my lesson observation tool includes simple timeline visualization of observations that is drawn on HTML-canvas using only Javascript. It was rather interesting to figure out how to draw axes, ticks, labels and the data with just canvas methods.
+
+I have mainly used Python in my analyzes and data visualization (Master's thesis, two articles and few posters etc.). I plan to use R more in the future.
+
+## Expectations
+I think I have quite good basic understanding of data visualization, but through this course I hope to refine and expand my knowledge and skills. I want to practice and become more proficient with R and ggplot2 as those have some benefits over Python. Additionally, there are some nice network analysis packages for R that I might need to use in the future. 
+
+***
+
+# Week 1
+The first week had only three very basic exercises with base R and I completed with one simple r-script file. Thus, the first week exercises are not included in this course diary. However, I did set up [github repository](https://github.com/MTurkkila/datavisR) and this course diary webpage. Additionally, I loaned the course book _Data Visualization: A Practical Introduction_ by Kieran Healy and _The functional art: : An introduction to information graphics and visualization_ by Alberto Cairo. At a glance both seem interesting and useful.
+
+## Reflection
+Unfortunately I missed first week lecture and exercise session as I was unaware I was accepted to the course. Foolishly I thought i would get notification via email, but Sisu is not smart enough system for that. I did go through the lecture slides and seemed that the content was interesting and engaging so I'm really disappointed I did not get to hear the lecture. Luckily, the first exercises were quick and easy so missing the first exercise session is not too worrisome.
+
+Overall, I have the feeling I will like this course and will learn something new.
+
 ***
