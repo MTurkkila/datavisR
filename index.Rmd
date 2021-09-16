@@ -1,0 +1,24 @@
+---
+title: "Data Visualization in R - Course Diary"
+author: "Miikka Turkkila"
+date: "9/16/2021"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    #highlight: github
+  #toc: true
+  #toc_depth: 2
+  #fig_caption: true
+  #fig_width: 6
+---
+
+***
+
+# Introduction
+
+```{r}
+# just a test
+1+1
+```
+  
+***
