@@ -46,3 +46,7 @@ Unfortunately I missed first week lecture and exercise session as I was unaware 
 Overall, I have the feeling I will like this course and will learn something new.
 
 ***
+```{r child = "week2_exercises.Rmd"}
+# to include week 2 exercises
+```
+
