@@ -1,0 +1,120 @@
+# Week 3
+
+```{r setup, warning = FALSE, message = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(forcats)
+```
+
+
+## Exercise 1
+
+### 1.1
+
+Read the *region_scores.csv* data into R. It should have 240 observations of 6 variables.  
+
+```{r message=FALSE}
+df <- read_csv("region_scores.csv")
+#Convert education to factorial
+df <- df %>% mutate(education = as.factor(education))
+df %>% summary #check summary of the data
+```
+
+
+### 1.2
+
+Cut the continuous variable **age** into a categorical variable **age_group** that has groups of width 10. Use ggplot2's cutting function.  
+
+Count observations by age group.
+
+```{r}
+df <- df %>% mutate(age_group = cut_width(age, 10))
+df %>% count(age_group)
+```
+
+
+## Exercise 2
+
+The chunk below is supposed to produce a plot but it has some errors.  
+
+The figure should be a scatter plot of **age** on the x-axis and **score** on the y-axis, with points coloured by **education level** (3 levels). It should also have three linear regression lines, one for each of the education levels.  
+
+Fix the code to produce the right figure.  
+
+What happens if you use `geom_jitter()` instead of `geom_point()`? 
+
+`Jitter` seems to give some random variation or noise. This is confirmed by ggplot documentation.
+
+```{r warning=FALSE}
+df %>% 
+  ggplot(aes(x = age, y = score, color = education)) + geom_point() + 
+  geom_smooth(method = "lm") +
+  theme_light()
+
+```
+
+
+## Exercise 3
+
+### 3.1
+
+Calculate the mean, standard deviation (sd), and number of observations (n) of **score by education and age group**. Also calculate the standard error of the mean (by using sd and n). Save these into a new data frame (or tibble) named edu_age_stats.  
+
+```{r}
+edu_age_stats <- df %>% group_by(education, age_group) %>% summarise(mean=mean(score), sd=sd(score), n=n())
+# Compute standard error of mean as sd/sqrt(n)
+edu_age_stats$se = edu_age_stats$sd/sqrt(edu_age_stats$n)
+```
+
+### 3.2
+
+Using edu_age_stats, plot a bar plot that has **age group** on the x-axis, **mean score** on the y-axis, and **education levels** in subplots (facets).  
+
+Use `geom_errorbar()` to add error bars that represent standard errors of the mean.  
+
+```{r}
+edu_age_stats %>% ggplot(aes(x = age_group, y = mean)) +
+  facet_wrap("education", labeller = "label_both") +
+  geom_col(fill = "#fcd116") + # Color of our faculty for fun
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour = "#002b7f") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  scale_y_continuous(name = "Mean score", limits = c(0, 20)) +
+  scale_x_discrete(name = "Age Group")
+```
+
+
+## Exercise 4
+
+### 4.1
+
+Create a figure that has boxplots of **score** (x-axis) by **region** (y-axis).  
+
+```{r}
+df %>% ggplot(aes(x = score, y = region)) + geom_boxplot() + theme_classic()
+```
+
+### 4.2
+
+Group the data by region and add mean score by region to a new column **mean_score**. Do this with **`mutate()`** (not `summarise()`). 
+
+Reorder the levels of region based on mean_score.  
+```{r}
+df <- df %>% group_by(region) %>% mutate(mean_score=mean(score)) %>% ungroup()
+df$region <- fct_reorder(df$region, df$mean_score, min)
+```
+
+
+## Exercise 5
+
+Using the data you modified in exercise 4.2, plot **mean scores** (x-axis) by **region** (y-axis) as points. The regions should be ordered by mean score.  
+
+Use `stat_summary()` to add error bars that represent standard errors of the mean.  
+```{r}
+df %>% ggplot(aes(mean_score, region)) +
+  geom_point() + # All mean scores of each region at the same coordinates, geom_jitter would reveal this
+  stat_summary(aes(score), fun.data = mean_se, geom="errorbar") + # Errorbars from scores
+  theme_minimal() +
+  scale_x_continuous(name = "Mean Score", breaks=c(10:20)) +
+  scale_y_discrete(name = "Region")
+```

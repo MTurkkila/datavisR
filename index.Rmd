@@ -50,3 +50,7 @@ Overall, I have the feeling I will like this course and will learn something new
 # to include week 2 exercises
 ```
 
+***
+```{r child = "week3_exercises.Rmd"}
+# to include week 3 exercises
+```
