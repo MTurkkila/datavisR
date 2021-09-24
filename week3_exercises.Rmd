@@ -79,7 +79,7 @@ edu_age_stats %>% ggplot(aes(x = age_group, y = mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour = "#002b7f") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  scale_y_continuous(name = "Mean score", limits = c(0, 20)) +
+  scale_y_continuous(name = "Mean score", expand = c(0, 0), limits = c(0, 20)) +
   scale_x_discrete(name = "Age Group")
 ```
 
