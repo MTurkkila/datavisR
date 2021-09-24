@@ -1,0 +1,12 @@
+# Network Visualizations with igraph
+
+This is my own exercise to learn igraph package and to visualize (and analyze) networks.
+
+```{r message=FALSE, warning=FALSE}
+library(igraph)
+```
+
+```{r}
+
+```
+
