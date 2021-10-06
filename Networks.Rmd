@@ -1,4 +1,4 @@
-# Network Visualizations with igraph
+## Network Visualizations with igraph
 
 This is my own exercise to learn igraph package and to visualize (and analyze) networks.
 ```{r message=FALSE, warning=FALSE, include=FALSE}
@@ -28,7 +28,7 @@ plot(g
 ```
 
 Let's make it bigger with circular layout and nicer colors.
-```{r fig.height=5, fig.width=5}
+```{r fig.height=8, fig.width=8}
 plot(g,
      layout = layout.circle(g),
      vertex.size=15,
@@ -59,7 +59,7 @@ df %>% ggpairs(lower = list(continuous = "smooth"))
 ```
 
 Plot with *Kamada & Kawai* layout and node size from node degree.
-```{r fig.height=5, fig.width=5}
+```{r fig.height=8, fig.width=8}
 plot(g,
      layout = layout.kamada.kawai(g),
      vertex.size=df$deg,
@@ -69,7 +69,7 @@ plot(g,
      vertex.frame.color="black")
 ```
 Star plot with the *Dude* rightfully in the center and using eigencentrality to set the order and size of the nodes. It would be nicer to be able to set the starting point for the circular layout so that *Walter* would on top. I did not find a simple or easy way to do this.
-```{r fig.height=5, fig.width=5}
+```{r fig.height=8, fig.width=8}
 plot(g,
      layout = layout.star(g, center = V(g)["DUDE"], order = order(df$eig, decreasing = TRUE)),
      vertex.size=df$eig*20,

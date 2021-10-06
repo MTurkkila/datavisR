@@ -146,7 +146,7 @@ head(fss_means)
 
 Let's try to make a bubble plot.
 
-```{r fig.height=4, fig.width=6}
+```{r fig.height=7, fig.width=10}
 fss_means %>% ggplot(aes(x = session, y = flow_mean, size = collisions_mean, fill = speed)) +
   geom_point(alpha = 0.75, shape=21, color = "black") +
   scale_size(range = c(0.5, 5), name="Average number \nof collisions") +
