@@ -1,0 +1,177 @@
+# Week 4
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(viridis)
+```
+
+
+## Exercise 1
+
+Read the region_scores.csv data (make sure you have the data file in the right folder). 
+
+```{r message=FALSE, include=FALSE}
+df <- read_csv("region_scores.csv")
+```
+
+Create a figure that shows the distributions (density plots or histograms) of **age** and **score** in separate subplots (facets). What do you need to do first?  
+
+In the figure, set individual x-axis limits for age and score by modifying the `scales` parameter within `facet_wrap()`.
+
+**Hint**: To make things simpler, you can begin by selecting only the variables you need here, i.e. age and score.  
+
+```{r}
+df %>% gather(key = "key", value = value, 5:6) %>% ggplot(aes(x=value)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap("key", scales = "free") +
+  theme_minimal()
+```
+
+```{r}
+df %>% gather(key = "key", value = value, 5:6) %>% ggplot(aes(x=value)) +
+  geom_density(fill="#fcd116") +
+  facet_wrap("key", scales = "free") +
+  theme_classic()
+```
+
+## Exercise 2
+
+In this exercise, you will use the built-in iris dataset.  
+
+```{r}
+head(iris)
+```
+
+### 2.1 
+
+Make the data into long format: gather all variables except species into new variables **var** (variable names) and **measure** (numerical values). You should end up with 600 rows and 3 columns (Species, var, and measure). Assign the result into `iris_long`.
+
+```{r}
+iris_long <- iris %>% gather(key = "var", value = measure, -Species)
+```
+
+### 2.2
+
+In `iris_long`, separate **var** into two variables: **part** (Sepal/Petal values) and **dim** (Length/Width).  
+
+Then, spread the measurement values to new columns that get their names from **dim**. You must create row numbers by dim group before doing this.  
+
+You should now have 300 rows of variables Species, part, Length and Width (and row numbers). Assign the result into `iris_wide`.
+
+```{r}
+iris_wide <- iris_long %>% separate(var, c("part", "dim")) %>% group_by(dim) %>% mutate(row_no = row_number()) %>% spread(dim, measure) 
+```
+
+### 2.3
+
+Using `iris_wide`, plot a scatter plot of length on the x-axis and width on the y-axis. Colour the points by part.
+
+```{r}
+iris_wide %>% ggplot(aes(x = Length, y = Width, color = part)) +
+  geom_point() +
+  theme_classic()
+```
+
+
+-------------------
+
+## Working with your own data
+
+In exercises 3-5, you'll work with your own dataset. **If you don't have you own data, use the fss_learning.csv data (see description below).** 
+
+In these exercises, you are required to provide an overview of your data, using the tools we have learned so far. Because all datasets are different, the format of the exercises is quite open. You will get points for being thorough and trying your best - even if you didn't know how to write something in code, be explicit with what you were **trying** to achieve. When submitting the exercises, **please return both an .Rmd and an .html file! The HTML file created by previewing a Notebook (with the suffix .nb.html) is fine, but make sure that the HTML contains all the code and output that is needed for getting an impression of the data. In other words, the document needs to be readable without having access to the full dataset. **
+
+
+### the fss_learning data
+
+fss_learning.csv contains data from a longitudinal skill learning experiment. There are observations at multiple levels: a total of 18 **participants**, each completing 8 **sessions** which consist of 5 **runs** (trials) of a game-like driving task (i.e. 8*5 = 40 trials per participant). You can read more about the design [here](https://doi.org/10.3389/fpsyg.2019.01126).  
+
+In the data, there are trial-level measures related to performance (number of **collisions**, **duration** in seconds, **distance** travelled), as well as self-reports on a scale of 1-7 (variables fluency:comp3) collected after each trial or session. 
+
+
+## Exercise 3
+
+As I don't have suitable data for these exercises I'll do the ex 3 and ex 4 with the fss_learning data. Additionally, in ex 5 I describe my network data I have now and will have in the future. I also make some network visualizations with example data.
+
+### 3.1
+
+Importing fss data into R.
+
+```{r include=FALSE}
+fss <- read_csv("fss_learning.csv")
+```
+
+
+### 3.2
+
+Print the structure/glimpse/summary of the data. Outline briefly what kind of variables you have and if there are any missing or abnormal values. Make sure that each variable has the right class (numeric/character/factor etc).  
+
+```{r}
+structure(fss)
+glimpse(fss)
+summary(fss)
+```
+
+```{r}
+fss <- fss %>% mutate(gender = as.factor(gender),
+                      participant = as.integer(participant),
+                      session = as.integer(session),
+                      run = as.integer(run),
+                      cumrun = as.integer(cumrun))
+
+head(fss)
+```
+
+
+## Exercise 4
+
+Pick a few (2-5) variables of interest from your data (ideally, both categorical and numerical).  
+
+For **categorical variables**, count the observations in each category (or combination of categories). Are the frequencies balanced?  
+
+Only categorical variable variable count that I'm intrested is gender.
+```{r}
+fss %>% count(gender)
+```
+
+I this this is ok, even if it is not quite equal.
+
+For **numerical variables**, compute some summary statistics (e.g. min, max, mean, median, SD) over the whole dataset or for subgroups. What can you say about the distributions of these variables, or possible group-wise differences?  
+
+```{r}
+fss_means <- fss %>% group_by(participant, session) %>% summarise(flow_mean = mean(flow, na.rm = TRUE), flow_sd = sd(flow, na.rm = TRUE), collisions_mean = mean(collisions, na.rm = TRUE), speed = mean(distance/duration)) # participant 8 has some NA values, using na.rm = TRUE functions no to drop those NA values before computung the summary statistic. Otherwise the result would also be just NA
+
+head(fss_means)
+```
+
+Let's try to make a bubble plot.
+
+```{r fig.height=4, fig.width=6}
+fss_means %>% ggplot(aes(x = session, y = flow_mean, size = collisions_mean, fill = speed)) +
+  geom_point(alpha = 0.75, shape=21, color = "black") +
+  scale_size(range = c(0.5, 5), name="Average number \nof collisions") +
+  scale_fill_viridis(option="F") +
+  facet_wrap("participant") +
+  theme_minimal() +
+  theme(legend.position = c(0.8, 0.08), legend.box = 'horizontal')
+```
+
+Even tough it is possible to include lot of information into a bubble plot, I don't think it is that useful or good. At least not here with the 18 facets. In some limited cases it might be applicable with a single facet if all the variables are meaningfully connected.
+
+
+## Exercise 5
+The network data I have is used in article I have submitted, but I do not want make the data set public just yet (everything I do in this course is on my GitHub on a public repository). But I describe the data and use social network data from a movie for learning igraph package and network visualizations.
+
+### 5.1
+
+Describe if there's anything else you think should be done as "pre-processing" steps (e.g. recoding/grouping values, renaming variables, removing variables or mutating new ones, reshaping the data to long format, merging data frames together).
+
+The network data I have in my own research is already in nice format. Actually, for the next analyses I will still use Python as I have the network data as graph-tool objects and I have all useful functions already written. However, if need be the network data is easily tranferred as link-list in dataframes between python and R.
+
+In another project I might need to analyze concept maps as networks. I get the concept map data as json-files and I need to write simple function to convert the data into a igraph object. This should be straightforward with the jsonlite library.
+
+### 5.2
+
+Do you have an idea of what kind of relationships in your data you would like to visualise and for which variables? For example, would you like to depict variable distributions, the structure of multilevel data, summary statistics (e.g. means), or include model fits or predictions?
+
+Depending which network I'm analyzing I need to compute different centrality measures. Those measures are then used in the network visualizations. In my own research I need to compute correlations between different network measures and also, maybe, centrality distributions. With the **ggpairs** these are visualized nicely.

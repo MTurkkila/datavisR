@@ -1,12 +1,80 @@
 # Network Visualizations with igraph
 
 This is my own exercise to learn igraph package and to visualize (and analyze) networks.
-
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(GGally)
 library(igraph)
+library("networkdata") # to get network data from movies
+# https://www.rdocumentation.org/packages/networkdata/versions/0.1.6
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/T4HBA3
 ```
 
+```{r eval=FALSE, include=FALSE}
+drat::addRepo("schochastics")
+#data(package = "networkdata") # Use this to see possible networks
+```
+
+I selected one of my favorite movies, *Big Lebowski* to experiment with. First, load the data as network and print all nodes.
 ```{r}
-
+g <- movie_103 # network g of the Big Lebowski
+V(g) # all nodes
 ```
 
+Let's make two simple plots with different layouts and settings
+```{r}
+plot(g
+     )
+```
+
+Let's make it bigger with circular layout and nicer colors.
+```{r fig.height=5, fig.width=5}
+plot(g,
+     layout = layout.circle(g),
+     vertex.size=15,
+    vertex.color="#009bff", 
+    vertex.label.cex=0.5,
+    vertex.label.color="white",
+    vertex.frame.color="black")
+```
+
+Let's now calculate network measures and use those for nicer plots. 
+```{r}
+# degree_centrality
+df <- base::as.data.frame(degree(g))
+colnames(df) <- c("deg")
+# eigen_centrality
+df$eig <- eigen_centrality(g)$vector
+# page_rank
+df$pr <-  page_rank(g)$vector
+# Katz_degree
+# There's no function to calculate katz-centrality. Need to make my own, if I plan to use R for my analyses.
+df <- df %>% mutate(deg = as.integer(deg))
+head(df)
+```
+
+Also ggpairs-plot for the measures. All correlate nicely, as they should!
+```{r}
+df %>% ggpairs(lower = list(continuous = "smooth"))
+```
+
+Plot with *Kamada & Kawai* layout and node size from node degree.
+```{r fig.height=5, fig.width=5}
+plot(g,
+     layout = layout.kamada.kawai(g),
+     vertex.size=df$deg,
+     vertex.color="#009bff", 
+     vertex.label.cex=0.7,
+     vertex.label.color="black",
+     vertex.frame.color="black")
+```
+Star plot with the *Dude* rightfully in the center and using eigencentrality to set the order and size of the nodes. It would be nicer to be able to set the starting point for the circular layout so that *Walter* would on top. I did not find a simple or easy way to do this.
+```{r fig.height=5, fig.width=5}
+plot(g,
+     layout = layout.star(g, center = V(g)["DUDE"], order = order(df$eig, decreasing = TRUE)),
+     vertex.size=df$eig*20,
+     vertex.color="#009bff", 
+     vertex.label.cex=0.7,
+     vertex.label.color="black",
+     vertex.frame.color="black")
+```
