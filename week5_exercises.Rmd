@@ -1,0 +1,183 @@
+---
+title: "Week 5 Exercises"
+output: html_notebook
+---
+
+```{r message=TRUE, warning=TRUE}
+library(tidyr)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+```
+
+
+Read the file timeuse_tidy.rds with `readRDS()`. The file contains the dataset that we tidied in the exercise session: records of daily time use from participants over multiple days. Note that since the data has been stored as rds (R-specific format), column types and factor levels are as we left them, and don't need to be re-corrected.
+
+```{r}
+tidytime <- readRDS("timeuse_tidy.rds")
+glimpse(tidytime)
+```
+
+
+# Exercise 1
+
+#### 1.1
+
+Create a new variable that contains combined activity classes: "Work or school" (Work, Business, Education), "Free time" (Shopping, Social / Leisure, Home, Vacation), and "Other".  
+
+
+```{r}
+act_key <- c("Work" = "Work or school", "Business" = "Work or school", "Education" = "Work or school", "Shopping" = "Free time", "Social / Leisure" = "Free time", "Home" = "Free time", "Vacation" = "Free time")
+
+tidytime <- tidytime %>% mutate(activity_class = recode(activity_class, !!!act_key, .default = "Other") %>% factor)
+```
+
+Calculate the mean time spent on each of the combined activity classes, grouped by **weekday, participant ID, and occ_full_time**.
+
+```{r}
+mean_times <- tidytime %>% group_by(weekday, indivID, occ_full_time, activity_class) %>% summarise(mean(time_spent))
+head(mean_times)
+```
+
+
+#### 1.2 
+
+Visualise the means you calculated.
+
+```{r}
+mean_times %>% ggplot(aes(x = activity_class, y = `mean(time_spent)`)) + 
+  geom_violin(fill="#009bff") + # HY blue
+  theme_bw() +
+  scale_y_continuous(name = "Mean time spent") +
+  scale_x_discrete(name = "Activity class")
+```
+
+
+# Exercise 2
+
+#### 2.1
+
+What is computed in the code chunk below - what do the numbers tell you?  
+
+Can you think of another way to calculate the same thing?  
+
+```{r}
+
+date_counts <- tidytime %>%
+  distinct(indivID, date) %>% # Select distinct individuals and dates
+  arrange(date) %>%           # Arrange the data by date
+  count(date)                 # Count individuals per each date
+
+date_counts                   # Show counts
+```
+
+
+#### 2.2
+
+Plot the numbers from above (use points, lines, or whatever you think is suitable).  
+
+```{r}
+date_counts %>% ggplot(aes(x = date, y = n)) +
+  geom_point() +
+  theme_minimal() +
+  scale_y_continuous(name = "number of participants")
+```
+
+
+# Exercise 3
+
+#### 3.1
+
+Count the **total number of participants** in the data.  
+
+```{r}
+tidytime %>% distinct(indivID) %>% count()
+```
+
+#### 3.2
+
+For each participant, count the **number of separate days** that they recorded their time use on.  
+
+```{r}
+tidytime %>% group_by(indivID) %>% distinct(date) %>% count(indivID)
+```
+
+
+# Exercise 4
+
+Explain step by step what happens in the code chunk below and what the final figure represents.
+
+_Explanations as comments. The final figure represents when the participants recorded their activities (points) with the overall all timespan (lines). The individuals are order by start date top to bottom and thus the figure shows this general trend left-to-right and top-to-bottom. Colors represent start month._
+
+```{r fig.height=20, fig.width=10}
+tidytime %>%
+  group_by(indivID) %>% # Group by individuals 
+  mutate(start_date = min(date)) %>% # Compute and add start date as minimum date per each individual (as it is grouped)
+  ungroup %>% # ungroup the data
+  mutate(indivID = factor(indivID), # factorize indivID variable
+         indivID = fct_reorder(indivID, start_date) %>% fct_rev()) %>% # reorder indivID by start date
+  ggplot(aes(date, indivID, colour = month(start_date, label = T))) + # init plot with date in x-axis and individuals on y-axis, color data by starting month that are displayed as a character strings
+  geom_line() + # add line plot
+  geom_point(size=.5, alpha=.1) + # add points and set point size and transparency (alpha channel for points' colors)
+  theme_bw() + # set the bw-theme (dark-on-light)
+  scale_y_discrete(breaks = "none") + # remove ticks form y-axis
+  labs(x = "Date", y = "", colour = "Starting month") # set labels for the axes and 
+```
+
+
+## Extra
+
+```{r}
+library(cowplot)
+```
+
+```{r}
+utter <- read_csv2("utter.csv")
+
+utter <- utter %>% mutate(
+  season = as.factor(season),
+  group = as.factor(group),
+  id = as.numeric(row.names(utter))
+)
+
+utter <- utter %>% mutate(
+  season = fct_reorder(season, id)
+)
+
+head(utter)
+```
+
+
+```{r, fig.width=8}
+p1 <- utter %>% ggplot(aes(x = season, fill = group)) + # Keep the order same as in the df
+  geom_bar(width = 1) +
+  scale_fill_manual(values=cbPalette) +
+  scale_y_discrete(breaks = NULL, expand = c(0, 0)) +
+  labs(x="Seasons", y="") +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "white"))
+
+# Wrap bars into a pie
+start_angle = -0.5*(360/11)*(pi/180) # fixing start angle so that the first season "napa" is at the top
+p2 <- p1 +coord_polar(start = start_angle)
+
+plot_grid(p1, p2)
+```
+
+```{r}
+utter %>% ggplot(aes(y = group, fill = fct_reorder(season, id))) +
+  geom_bar(stat = "count", width = 1) +
+  theme_classic()
+```
+
+
+```{r}
+utter %>% group_by(season) %>% count(group) %>%  ggplot(aes(x = "", y = n, fill = group)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  scale_y_continuous(breaks = NULL) +
+  facet_wrap(~season) +
+  scale_fill_manual(values=cbPalette) +
+  labs(x="", y="") +
+  theme_void()
+```
