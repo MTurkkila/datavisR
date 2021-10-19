@@ -55,11 +55,16 @@ Overall, I have the feeling I will like this course and will learn something new
 
 ***
 ```{r child = "week4_exercises.Rmd"}
-# to include week 3 exercises
+# to include week 4 exercises
 ```
 
 ```{r child = "Networks.Rmd"}
 # to include network visualizations as part of week 4
+```
+
+***
+```{r child = "week5_exercises.Rmd"}
+# to include week 5 exercises
 ```
 
 ***

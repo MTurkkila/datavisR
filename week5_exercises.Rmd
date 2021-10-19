@@ -1,9 +1,6 @@
----
-title: "Week 5 Exercises"
-output: html_notebook
----
+# Week 5 Exercises"
 
-```{r message=TRUE, warning=TRUE}
+```{r message=FALSE, warning=FALSE}
 library(tidyr)
 library(ggplot2)
 library(tidyverse)
@@ -19,12 +16,11 @@ glimpse(tidytime)
 ```
 
 
-# Exercise 1
+## Exercise 1
 
-#### 1.1
+### 1.1
 
 Create a new variable that contains combined activity classes: "Work or school" (Work, Business, Education), "Free time" (Shopping, Social / Leisure, Home, Vacation), and "Other".  
-
 
 ```{r}
 act_key <- c("Work" = "Work or school", "Business" = "Work or school", "Education" = "Work or school", "Shopping" = "Free time", "Social / Leisure" = "Free time", "Home" = "Free time", "Vacation" = "Free time")
@@ -39,8 +35,7 @@ mean_times <- tidytime %>% group_by(weekday, indivID, occ_full_time, activity_cl
 head(mean_times)
 ```
 
-
-#### 1.2 
+### 1.2 
 
 Visualise the means you calculated.
 
@@ -53,9 +48,9 @@ mean_times %>% ggplot(aes(x = activity_class, y = `mean(time_spent)`)) +
 ```
 
 
-# Exercise 2
+## Exercise 2
 
-#### 2.1
+### 2.1
 
 What is computed in the code chunk below - what do the numbers tell you?  
 
@@ -71,8 +66,7 @@ date_counts <- tidytime %>%
 date_counts                   # Show counts
 ```
 
-
-#### 2.2
+### 2.2
 
 Plot the numbers from above (use points, lines, or whatever you think is suitable).  
 
@@ -84,9 +78,9 @@ date_counts %>% ggplot(aes(x = date, y = n)) +
 ```
 
 
-# Exercise 3
+## Exercise 3
 
-#### 3.1
+### 3.1
 
 Count the **total number of participants** in the data.  
 
@@ -94,7 +88,7 @@ Count the **total number of participants** in the data.
 tidytime %>% distinct(indivID) %>% count()
 ```
 
-#### 3.2
+### 3.2
 
 For each participant, count the **number of separate days** that they recorded their time use on.  
 
@@ -103,7 +97,7 @@ tidytime %>% group_by(indivID) %>% distinct(date) %>% count(indivID)
 ```
 
 
-# Exercise 4
+## Exercise 4
 
 Explain step by step what happens in the code chunk below and what the final figure represents.
 
@@ -125,14 +119,17 @@ tidytime %>%
 ```
 
 
-## Extra
+## Extra - categorical time and value
 
-```{r}
-library(cowplot)
+I got intrested about Ben's example of restaurant menus as categorical time and value. And of course how to visualize those. Luckily, one restaurant/chef in Lohja, [Mikko Utter](http://www.mikkoutter.fi/kaudet.html), has menus for each season available at his webpage. So I crabbed those and coded the menu items very rough to food groups for simple  visualizations. Unfortunately, the seasons are in Finnish and I do not know good translations for all so I did not translate those.
+
+```{r message=FALSE, warning=FALSE}
+library(cowplot) #for side-by-side plots
 ```
 
-```{r}
-utter <- read_csv2("utter.csv")
+Read the data `utter.csv´ and mutate to categories. Ids from row numbers that are then used to reorder the seasons so that they remain in temporal order.
+```{r message=FALSE, warning=FALSE}
+utter <- read_csv2("utter.csv", col_types = cols())
 
 utter <- utter %>% mutate(
   season = as.factor(season),
@@ -146,12 +143,14 @@ utter <- utter %>% mutate(
 
 head(utter)
 ```
+Simple bar plot and pie plot side-by-side. The pie plot is, according to the _Grammar of Graphics_, just a bar plot with polar coordinates. Thus making pie plot from bar plot with the ggplot is straightforward.
+```{r, fig.width=10}
+#Custom palette for nicer colors. Original from http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/ but this is reordered to correspond bit nicer with the food groups
+myPalette <- c("#56B4E9", "#E69F00", "#D55E00", "#F0E442", "#999999", "#CC79A7", "#0072B2", "#009E73")
 
-
-```{r, fig.width=8}
 p1 <- utter %>% ggplot(aes(x = season, fill = group)) + # Keep the order same as in the df
   geom_bar(width = 1) +
-  scale_fill_manual(values=cbPalette) +
+  scale_fill_manual(values=myPalette) +
   scale_y_discrete(breaks = NULL, expand = c(0, 0)) +
   labs(x="Seasons", y="") +
   theme_minimal() +
@@ -163,21 +162,23 @@ p2 <- p1 +coord_polar(start = start_angle)
 
 plot_grid(p1, p2)
 ```
+Usually pie plots are not recomended, but I like to visualize a year as circle so to me atleast the pie plot is more  intuitive and pleasing. Also, this video [Nightingale Diagrams - Numberphile](https://www.youtube.com/watch?v=VTdVPNvwULM) discusses and shows nice circular visualizations
 
+Here is a horizontal bar plot of number of each food groups colored by the seasons. This uses the default color map of ggplot2 is quite horrendous, but then again I don't think this is a good visualization of this data.
 ```{r}
-utter %>% ggplot(aes(y = group, fill = fct_reorder(season, id))) +
+utter %>% ggplot(aes(y = group, fill = season)) +
   geom_bar(stat = "count", width = 1) +
   theme_classic()
 ```
 
-
-```{r}
+Finally, let's make a pie plots of the grousp for each season. Again, I think here the pie plots are visually pleasing.
+```{r, fig.width=8}
 utter %>% group_by(season) %>% count(group) %>%  ggplot(aes(x = "", y = n, fill = group)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   scale_y_continuous(breaks = NULL) +
   facet_wrap(~season) +
-  scale_fill_manual(values=cbPalette) +
+  scale_fill_manual(values=myPalette) +
   labs(x="", y="") +
   theme_void()
 ```

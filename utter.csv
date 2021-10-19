@@ -1,0 +1,78 @@
+season;menu item;group
+Napa;Porkkana;Vegetable
+Napa;Mustajuuri;Vegetable
+Napa;Kuivaliha;Meat
+Napa;Cheddar;Cheese
+Napa;Hirvi;Meat
+Napa;Päärynä;Fruit
+Napa;Pienet Leivonnaiset;Pastry
+Talvi;Selleri;Vegetable
+Talvi;Blini;Other
+Talvi;Kuha;Seafood
+Talvi;Tatti;Mushroom
+Talvi;Ankka;Meat
+Talvi;Mustaselja;Fruit
+Talvi;Pienet Leivonnaiset;Pastry
+Mahla;Raitajuuri;Vegetable
+Mahla;Peruna;Vegetable
+Mahla;Simpukka;Seafood
+Mahla;Kananmuna;Other
+Mahla;Hereford;Meat
+Mahla;Vaahtera;Other
+Mahla;Pienet Leivonnaiset;Pastry
+Pääsiäinen;Nauris;Vegetable
+Pääsiäinen;Kuningasrapu;Seafood
+Pääsiäinen;Maa-artisokka;Vegetable
+Pääsiäinen;Porsas;Meat
+Pääsiäinen;Karitsa;Meat
+Pääsiäinen;Herukka;Fruit
+Pääsiäinen;Pienet Leivonnaiset;Pastry
+Kaski;Keräkaali;Vegetable
+Kaski;Savukala;Seafood
+Kaski;Risotto;Other
+Kaski;Kampasimpukka;Seafood
+Kaski;Rusakko;Meat
+Kaski;Mustikka;Fruit
+Kaski;Pienet Leivonnaiset;Pastry
+Kylvö;Parsa;Vegetable
+Kylvö;Korvasieni;Mushroom
+Kylvö;Kuha;Seafood
+Kylvö;Nokkonen;Vegetable
+Kylvö;Biisoni;Meat
+Kylvö;Raparperi;Vegetable
+Kylvö;Pienet Leivonnaiset;Pastry
+Suvi;Tomaatti;Vegetable
+Suvi;Kylmäsavulohi;Seafood
+Suvi;Avomaalaiset 1;Other
+Suvi;Avomaalaiset 2;Other
+Suvi;Kana;Meat
+Suvi;Mansikka;Fruit
+Suvi;Pienet Leivonnaiset;Pastry
+Rapu;Pinaatti;Vegetable
+Rapu;Rapu;Seafood
+Rapu;Sieni;Mushroom
+Rapu;Muikku;Seafood
+Rapu;Hereford;Meat
+Rapu;Vadelma;Fruit
+Rapu;Pienet Leivonnaiset;Pastry
+Ruska;Kurpitsa;Vegetable
+Ruska;Kuha;Seafood
+Ruska;Kaali;Vegetable
+Ruska;Härkäpapu;Vegetable
+Ruska;Sorsa;Meat
+Ruska;Omena;Fruit
+Ruska;Pienet Leivonnaiset;Pastry
+Kekri;Palsternakka;Vegetable
+Kekri;Hauki;Seafood
+Kekri;Sorsanmaksa;Meat
+Kekri;Juusto;Cheese
+Kekri;Peura;Vegetable
+Kekri;Saskatoon;Fruit
+Kekri;Pienet Leivonnaiset;Pastry
+Joulu;Punajuuri;Vegetable
+Joulu;Lohi;Seafood
+Joulu;Rousku;Mushroom
+Joulu;Siianmäti;Seafood
+Joulu;Kalkkuna;Meat
+Joulu;Homejuusto;Cheese
+Joulu;Pienet Leivonnaiset;Pastry
