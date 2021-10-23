@@ -7,7 +7,7 @@ output:
     theme: architect
     highlight: github
     toc: true
-    toc_depth: 3
+    toc_depth: 2
     fig_caption: true
 ---
 
@@ -65,6 +65,11 @@ Overall, I have the feeling I will like this course and will learn something new
 ***
 ```{r child = "week5_exercises.Rmd"}
 # to include week 5 exercises
+```
+
+***
+```{r child = "week6_exercises.Rmd"}
+# to include week 6 exercises
 ```
 
 ***
