@@ -1,5 +1,7 @@
 # Course repo for Datavisualization in R
 
+https://mturkkila.github.io/datavisR/
+
 Some links:
 * Moodle: https://moodle.helsinki.fi/course/view.php?id=47523
 * Teacher's repo: https://github.com/ttammi/datavis-R-2021
